@@ -1,29 +1,23 @@
-import { BrowserRouter as Router,  Route, Routes } from "react-router-dom";
-import TodoForm from "./components/Form";
-import Todos from "./components/todos";
-import TodoDetail from "./components/todoDetail";
+import { BrowserRouter as Router, Route, Routes } from "react-router-dom";
+import HomePage from "./components/HomePage";
+import AddTodoPage from "./components/AddTodoPage";
+import IndividualTodoPage from "./components/IndividualTodoPage";
 
-
-
-
-const  App = () =>{
+const App = () => {
   return (
     <Router>
-    <div className="App">
-      <header className="App-header">
-        <h2> ToDO List App in redux</h2>
-        <Routes>
-         <Route path='/' element={<TodoForm/>}/>
-         </Routes>
-        <Routes>
-         <Route path="/todo/:name/:description" element={<TodoDetail/>} />
-         <Route path="/" element={<Todos/>} />
-         </Routes>
-      </header>
-    </div>
+      <div className="App">
+        <header className="App-header">
+          <h2> ToDO List App in redux</h2>
+          <Routes>
+            <Route exact path="/" element={<HomePage/>} />
+            <Route path="/add-todo" element={<AddTodoPage/>} />
+            <Route path="/todo/:id" element={<IndividualTodoPage/>} />
+          </Routes>
+        </header>
+      </div>
     </Router>
   );
-}
+};
 
 export default App;
-

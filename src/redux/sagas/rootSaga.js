@@ -1,28 +1,31 @@
-import { all, call, put, select, takeEvery, takeLatest } from 'redux-saga/effects'
-import { addTodo } from '../actions/actions';
+import { all, takeEvery, put, call } from 'redux-saga/effects';
 
-function* watchAddTodo() {
-    yield takeEvery('ADD_TODO', storeTodoInLocalStorage);
-  }
-  
-  function* watchDeleteTodo() {
-    yield takeEvery('DELETE_TODO', deleteTodoFromLocalStorage);
-  }
-  
-  function* storeTodoInLocalStorage(action) {
-    const todo = action.payload;
-    const todos = JSON.parse(localStorage.getItem('todos') || '[]');
-    todos.push(todo);
-    localStorage.setItem('todos', JSON.stringify(todos));
-  }
-  
-  function* deleteTodoFromLocalStorage(action) {
-    const deletedTodoId = action.payload;
-    const todos = JSON.parse(localStorage.getItem('todos') || '[]');
-    const updatedTodos = todos.filter((todo) => todo.id !== deletedTodoId);
-    localStorage.setItem('todos', JSON.stringify(updatedTodos));
-  }
-  
-  export function* rootSaga() {
-    yield all([watchAddTodo(), watchDeleteTodo()]);
-  }
+import { saveToLocalStorage, loadFromLocalStorage } from '../utils/localStorage';
+import { ADD_TODO, DELETE_TODO, TOGGLE_TODO_COMPLETE } from '../actions/actions';
+
+function* addTodoAsync(action) {
+  yield call(saveToLocalStorage, 'todos', [...loadFromLocalStorage('todos'), action.payload]);
+}
+
+function* deleteTodoAsync(action) {
+  const todos = loadFromLocalStorage('todos').filter(todo => todo.id !== action.payload);
+  yield call(saveToLocalStorage, 'todos', todos);
+}
+
+function* toggleTodoCompleteAsync(action) {
+  const todos = loadFromLocalStorage('todos').map(todo =>
+    todo.id === action.payload ? { ...todo, completed: !todo.completed } : todo
+  );
+  yield call(saveToLocalStorage, 'todos', todos);
+}
+
+function* rootSaga() {
+  yield all([
+    takeEvery(ADD_TODO, addTodoAsync),
+    takeEvery(DELETE_TODO, deleteTodoAsync),
+    takeEvery(TOGGLE_TODO_COMPLETE, toggleTodoCompleteAsync),
+
+  ]);
+}
+
+export default rootSaga;
