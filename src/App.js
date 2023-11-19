@@ -8,7 +8,7 @@ const App = () => {
     <Router>
       <div className="App">
         <header className="App-header">
-          <h2> ToDO List App in redux</h2>
+          <h2> TODO APP</h2>
           <Routes>
             <Route exact path="/" element={<HomePage/>} />
             <Route path="/add-todo" element={<AddTodoPage/>} />

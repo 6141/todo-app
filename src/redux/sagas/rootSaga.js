@@ -1,7 +1,8 @@
 import { all, takeEvery, put, call } from 'redux-saga/effects';
 
-import { saveToLocalStorage, loadFromLocalStorage } from '../utils/localStorage';
+
 import { ADD_TODO, DELETE_TODO, TOGGLE_TODO_COMPLETE } from '../actions/actions';
+import { loadFromLocalStorage, saveToLocalStorage } from '../../localStorage';
 
 function* addTodoAsync(action) {
   yield call(saveToLocalStorage, 'todos', [...loadFromLocalStorage('todos'), action.payload]);
@@ -15,7 +16,7 @@ function* deleteTodoAsync(action) {
 function* toggleTodoCompleteAsync(action) {
   const todos = loadFromLocalStorage('todos').map(todo =>
     todo.id === action.payload ? { ...todo, completed: !todo.completed } : todo
-  );
+    );
   yield call(saveToLocalStorage, 'todos', todos);
 }
 

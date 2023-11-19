@@ -1,5 +1,5 @@
     import { combineReducers } from 'redux';
-import { ADD_TODO, DELETE_TODO, TOGGLE_TODO_COMPLETE, UPDATE_TODO } from '../actions/actions';
+import { ADD_TODO, CLEAR_TODO, DELETE_TODO, TOGGLE_TODO_COMPLETE, UPDATE_TODO } from '../actions/actions';
 
     
     const todosReducer = (state = [], action) => {
@@ -10,12 +10,14 @@ import { ADD_TODO, DELETE_TODO, TOGGLE_TODO_COMPLETE, UPDATE_TODO } from '../act
           return state.filter(todo => todo.id !== action.payload);
         case UPDATE_TODO:
           return state.map(todo =>
-            todo.id === action.payload.id ? { ...todo, ...action.payload } : todo
+            todo.id === action.payload.id ? action.payload : todo
           );
         case TOGGLE_TODO_COMPLETE:
           return state.map(todo =>
             todo.id === action.payload ? { ...todo, completed: !todo.completed } : todo
           );
+        case CLEAR_TODO: 
+        return []
         default:
           return state;
       }

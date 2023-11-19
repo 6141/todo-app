@@ -2,31 +2,38 @@ import React from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import { useParams, useNavigate } from 'react-router-dom';
 import { updateTodo, deleteTodo } from '../redux/actions/actions';
+import { removeFromLocalStorage, saveToLocalStorage } from '../localStorage';
 
 const IndividualTodoPage = () => {
   const { id } = useParams();
   const navigate = useNavigate();
   const dispatch = useDispatch();
-  const todo = useSelector(state => state.todos.find(todo => todo.id === parseInt(id)));
+  const todo = useSelector(state => state?.todos?.find(todo => todo?.id === parseInt(id)));
 
   const handleUpdateTodo = (updatedTodo) => {
     dispatch(updateTodo(updatedTodo));
+    saveToLocalStorage('todos',updateTodo)
   };
 
   const handleDeleteTodo = () => {
-    dispatch(deleteTodo(todo.id));
+    dispatch(deleteTodo(todo?.id));
+    removeFromLocalStorage("todos");
     navigate('/');
   };
 
+  const gotoHomePage = () => {
+    navigate('/')
+  }
+
   return (
     <div>
-      <h1>{todo.title}</h1>
-      <p>{todo.description}</p>
+      <p class='bg-inherit'>YOUR TODO NAME:      {todo?.title}</p>
+      <p>YOUR TODO DESCRIPTION:      {todo?.description}</p>
       <label htmlFor="updateTitle">Update Title:</label>
       <input
         type="text"
         id="updateTitle"
-        defaultValue={todo.title}
+        defaultValue={todo?.title}
         onBlur={(e) => handleUpdateTodo({
           ...todo,
           title: e.target.value,
@@ -35,13 +42,16 @@ const IndividualTodoPage = () => {
       <label htmlFor="updateDescription">Update Description:</label>
       <textarea
         id="updateDescription"
-        defaultValue={todo.description}
+        defaultValue={todo?.description}
         onBlur={(e) => handleUpdateTodo({
           ...todo,
           description: e.target.value,
         })}
       />
       <button onClick={handleDeleteTodo}>Delete Todo</button>
+      <div>
+      <button onClick={gotoHomePage}>Go Back to HomePage</button>
+      </div>
     </div>
   );
 };
