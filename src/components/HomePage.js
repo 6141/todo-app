@@ -6,6 +6,7 @@ import {
   clearTodo,
   deleteTodo,
   toggleTodoComplete,
+  loadFromLocalStorageAction
 } from "../redux/actions/actions";
 import {
   loadFromLocalStorage,
@@ -17,21 +18,10 @@ const HomePage = () => {
   const todos = useSelector((state) => state.todos);
   const dispatch = useDispatch();
 
-  // useEffect(()=> {
-  //   const todosFromLocalStorage = loadFromLocalStorage('todos')
-  //   if(todosFromLocalStorage){
-  //     console.log('hjh')
-  //     dispatch(clearTodo())
-  //     todosFromLocalStorage.forEach(todo => {
-  //       const todoExists = todos.some(existingTodo => existingTodo.id === todo.id)
-  //       if(!todoExists){
-  //         dispatch(addTodo(todo))
-  //       }
-  //     })
-  //   }
-  // }, [dispatch, todos])
+  useEffect(() => {
+    dispatch(loadFromLocalStorageAction())
+  },[dispatch])
 
-  const todosFromLocalStorage = loadFromLocalStorage("todos");
 
   const handleDeleteTodo = (id) => {
     dispatch(deleteTodo(id));
@@ -40,7 +30,7 @@ const HomePage = () => {
 
   const handleToggleComplete = (id) => {
     dispatch(toggleTodoComplete(id));
-    saveToLocalStorage("todos", todos);
+     saveToLocalStorage("todos", todos);
   };
 
   return (

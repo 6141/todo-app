@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import { useParams, useNavigate } from 'react-router-dom';
 import { updateTodo, deleteTodo } from '../redux/actions/actions';
@@ -8,11 +8,14 @@ const IndividualTodoPage = () => {
   const { id } = useParams();
   const navigate = useNavigate();
   const dispatch = useDispatch();
-  const todo = useSelector(state => state?.todos?.find(todo => todo?.id === parseInt(id)));
+  const todos = useSelector(state => state.todos)
+  const todo = todos?.find(todo => todo?.id === parseInt(id))
+  const [currTodo, setCurrTodo] = useState(todo)
 
   const handleUpdateTodo = (updatedTodo) => {
     dispatch(updateTodo(updatedTodo));
-    saveToLocalStorage('todos',updateTodo)
+    setCurrTodo(updatedTodo)
+    saveToLocalStorage('todos',todos)
   };
 
   const handleDeleteTodo = () => {
@@ -27,13 +30,13 @@ const IndividualTodoPage = () => {
 
   return (
     <div>
-      <p class='bg-inherit'>YOUR TODO NAME:      {todo?.title}</p>
-      <p>YOUR TODO DESCRIPTION:      {todo?.description}</p>
+      <p class='bg-inherit'>YOUR TODO NAME:      {currTodo?.title}</p>
+      <p>YOUR TODO DESCRIPTION:      {currTodo?.description}</p>
       <label htmlFor="updateTitle">Update Title:</label>
       <input
         type="text"
         id="updateTitle"
-        defaultValue={todo?.title}
+        defaultValue={currTodo?.title}
         onBlur={(e) => handleUpdateTodo({
           ...todo,
           title: e.target.value,
@@ -42,7 +45,7 @@ const IndividualTodoPage = () => {
       <label htmlFor="updateDescription">Update Description:</label>
       <textarea
         id="updateDescription"
-        defaultValue={todo?.description}
+        defaultValue={currTodo?.description}
         onBlur={(e) => handleUpdateTodo({
           ...todo,
           description: e.target.value,

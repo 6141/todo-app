@@ -1,5 +1,6 @@
     import { combineReducers } from 'redux';
-import { ADD_TODO, CLEAR_TODO, DELETE_TODO, TOGGLE_TODO_COMPLETE, UPDATE_TODO } from '../actions/actions';
+import { ADD_TODO, CLEAR_TODO, DELETE_TODO, LOAD_TODOS_FROM_LOCAL_STORAGE, TOGGLE_TODO_COMPLETE, UPDATE_TODO } from '../actions/actions';
+import { loadFromLocalStorage } from '../../localStorage';
 
     
     const todosReducer = (state = [], action) => {
@@ -18,6 +19,8 @@ import { ADD_TODO, CLEAR_TODO, DELETE_TODO, TOGGLE_TODO_COMPLETE, UPDATE_TODO } 
           );
         case CLEAR_TODO: 
         return []
+        case LOAD_TODOS_FROM_LOCAL_STORAGE:
+          return action.payload
         default:
           return state;
       }
